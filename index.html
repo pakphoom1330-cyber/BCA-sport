@@ -11,46 +11,32 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: 'Prompt', sans-serif;
-        }
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #18181b;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #3f3f46;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #52525b;
-        }
+        body { font-family: 'Prompt', sans-serif; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #18181b; }
+        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 3px; }
     </style>
 </head>
 <body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col">
 
     <!-- Header -->
     <header class="bg-zinc-900 border-b border-zinc-800 text-white shadow-xl sticky top-0 z-30">
-        <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-3">
-                <div class="bg-amber-500/10 p-2.5 rounded-xl text-2xl border border-amber-500/20 backdrop-blur-sm">
+                <div class="bg-amber-500/10 p-2.5 rounded-xl text-2xl border border-amber-500/20">
                     <i class="fa-solid fa-shirt text-amber-400"></i>
                 </div>
                 <div>
                     <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-white">ระบบติดตามงานโรงงานทำผ้า <span class="text-amber-400">(ออนไลน์)</span></h1>
-                    <p class="text-xs sm:text-sm text-zinc-400">Fabric Workflow & Production Tracker (Real-Time Sync)</p>
+                    <p class="text-xs text-zinc-400">Fabric Workflow & Production Tracker</p>
                 </div>
             </div>
             <div class="flex items-center gap-3 w-full sm:w-auto justify-end">
-                <!-- Connection Status Indicator -->
                 <div id="connection-badge" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-zinc-900 rounded-xl text-xs font-medium text-zinc-300 border border-zinc-800">
                     <span id="connection-dot" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-                    <span id="connection-text">กำลังเชื่อมต่อฐานข้อมูล...</span>
+                    <span id="connection-text">เชื่อมต่อระบบแล้ว</span>
                 </div>
-                <button onclick="openNewOrderModal()" class="bg-amber-400 hover:bg-amber-500 text-zinc-950 font-bold px-4 py-2.5 rounded-xl shadow-lg transition duration-200 flex items-center gap-2 text-sm">
+                <button onclick="openNewOrderModal()" class="bg-amber-400 hover:bg-amber-500 text-zinc-950 font-bold px-4 py-2.5 rounded-xl shadow-lg transition flex items-center gap-2 text-sm">
                     <i class="fa-solid fa-plus-circle"></i> เพิ่มออเดอร์ใหม่
                 </button>
             </div>
@@ -58,429 +44,249 @@
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow w-full">
-        <!-- Dashboard Statistics Cards -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div class="bg-zinc-900 p-4 rounded-2xl shadow-sm border border-zinc-800 flex items-center justify-between">
+    <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full">
+        <!-- Stats -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-zinc-900 p-4 rounded-2xl border border-zinc-800 flex items-center justify-between">
                 <div>
-                    <p class="text-xs text-zinc-400 font-medium">ออเดอร์ทั้งหมด</p>
+                    <p class="text-xs text-zinc-400">ออเดอร์ทั้งหมด</p>
                     <h3 id="stat-total" class="text-2xl font-bold text-white mt-1">0</h3>
                 </div>
-                <div class="w-10 h-10 rounded-xl bg-zinc-800 text-amber-400 flex items-center justify-center text-lg border border-zinc-700/50">
-                    <i class="fa-solid fa-clipboard-list"></i>
-                </div>
+                <div class="w-10 h-10 rounded-xl bg-zinc-800 text-amber-400 flex items-center justify-center border border-zinc-700"><i class="fa-solid fa-clipboard-list"></i></div>
             </div>
-            <div class="bg-zinc-900 p-4 rounded-2xl shadow-sm border border-zinc-800 flex items-center justify-between">
+            <div class="bg-zinc-900 p-4 rounded-2xl border border-zinc-800 flex items-center justify-between">
                 <div>
-                    <p class="text-xs text-zinc-400 font-medium">รอดำเนินการ / เลยกำหนด</p>
+                    <p class="text-xs text-zinc-400">รอดำเนินการ / เลยกำหนด</p>
                     <h3 id="stat-red" class="text-2xl font-bold text-red-500 mt-1">0</h3>
                 </div>
-                <div class="w-10 h-10 rounded-xl bg-red-500/10 text-red-500 flex items-center justify-center text-lg border border-red-500/20">
-                    <i class="fa-solid fa-circle-exclamation"></i>
-                </div>
+                <div class="w-10 h-10 rounded-xl bg-red-500/10 text-red-500 flex items-center justify-center border border-red-500/20"><i class="fa-solid fa-circle-exclamation"></i></div>
             </div>
-            <div class="bg-zinc-900 p-4 rounded-2xl shadow-sm border border-zinc-800 flex items-center justify-between">
+            <div class="bg-zinc-900 p-4 rounded-2xl border border-zinc-800 flex items-center justify-between">
                 <div>
-                    <p class="text-xs text-zinc-400 font-medium">กำลังดำเนินการ</p>
+                    <p class="text-xs text-zinc-400">กำลังดำเนินการ</p>
                     <h3 id="stat-blue" class="text-2xl font-bold text-amber-400 mt-1">0</h3>
                 </div>
-                <div class="w-10 h-10 rounded-xl bg-amber-400/10 text-amber-400 flex items-center justify-center text-lg border border-amber-400/20">
-                    <i class="fa-solid fa-spinner animate-spin"></i>
-                </div>
+                <div class="w-10 h-10 rounded-xl bg-amber-400/10 text-amber-400 flex items-center justify-center border border-amber-400/20"><i class="fa-solid fa-spinner animate-spin"></i></div>
             </div>
-            <div class="bg-zinc-900 p-4 rounded-2xl shadow-sm border border-zinc-800 flex items-center justify-between">
+            <div class="bg-zinc-900 p-4 rounded-2xl border border-zinc-800 flex items-center justify-between">
                 <div>
-                    <p class="text-xs text-zinc-400 font-medium">แพ็คเสร็จสิ้น (สำเร็จ)</p>
+                    <p class="text-xs text-zinc-400">แพ็คเสร็จสิ้น (สำเร็จ)</p>
                     <h3 id="stat-green" class="text-2xl font-bold text-emerald-400 mt-1">0</h3>
                 </div>
-                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-lg border border-emerald-500/20">
-                    <i class="fa-solid fa-circle-check"></i>
-                </div>
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/20"><i class="fa-solid fa-circle-check"></i></div>
             </div>
         </div>
 
-        <!-- Filter & Search Toolbar -->
-        <div class="bg-zinc-900 p-4 rounded-2xl shadow-sm border border-zinc-800 mb-6 flex flex-col md:flex-row items-center justify-between gap-4">
+        <!-- Filter & Search -->
+        <div class="bg-zinc-900 p-4 rounded-2xl border border-zinc-800 mb-6 flex flex-col md:flex-row items-center justify-between gap-4">
             <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
-                <span class="text-sm font-semibold text-zinc-300 mr-2"><i class="fa-solid fa-filter text-amber-400 mr-1"></i> กรองสถานะ:</span>
+                <span class="text-sm font-semibold text-zinc-300 mr-2"><i class="fa-solid fa-filter text-amber-400 mr-1"></i> กรอง:</span>
                 <button onclick="filterStatus('all')" id="filter-btn-all" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-amber-400 text-zinc-950 transition">ทั้งหมด</button>
                 <button onclick="filterStatus('red')" id="filter-btn-red" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition">🔴 รอเริ่ม/เลยกำหนด</button>
                 <button onclick="filterStatus('blue')" id="filter-btn-blue" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition">🟡 กำลังทำ</button>
                 <button onclick="filterStatus('green')" id="filter-btn-green" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition">🟢 เสร็จแล้ว</button>
             </div>
             <div class="w-full md:w-72 relative">
-                <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-zinc-500">
-                    <i class="fa-solid fa-search"></i>
-                </span>
-                <input type="text" id="search-input" oninput="renderOrders()" placeholder="ค้นหาเลขออเดอร์, ลูกค้า, ชื่อผ้า..." class="w-full pl-9 pr-4 py-2 bg-zinc-950 border border-zinc-800 rounded-xl text-sm text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-amber-400 transition">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-zinc-500"><i class="fa-solid fa-search"></i></span>
+                <input type="text" id="search-input" oninput="renderOrders()" placeholder="ค้นหาเลขออเดอร์, ลูกค้า..." class="w-full pl-9 pr-4 py-2 bg-zinc-950 border border-zinc-800 rounded-xl text-sm text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-amber-400">
             </div>
         </div>
 
-        <!-- Orders Grid Container -->
-        <div id="orders-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Order Cards loaded dynamically via Firebase -->
-        </div>
+        <!-- Orders Grid -->
+        <div id="orders-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
 
-        <!-- Loading Spinner State -->
+        <!-- Loading -->
         <div id="loading-state" class="flex flex-col items-center justify-center py-20">
             <div class="w-12 h-12 border-4 border-amber-400 border-t-transparent rounded-full animate-spin mb-4"></div>
-            <p class="text-sm font-medium text-zinc-400">กำลังซิงค์ข้อมูลจากฐานข้อมูลคลาวด์...</p>
+            <p class="text-sm text-zinc-400">กำลังโหลดข้อมูล...</p>
         </div>
 
-        <!-- Empty State -->
+        <!-- Empty -->
         <div id="empty-state" class="hidden flex-col items-center justify-center py-16 bg-zinc-900 rounded-2xl border border-dashed border-zinc-800 text-center">
-            <div class="w-16 h-16 bg-zinc-800 text-amber-400 rounded-full flex items-center justify-center text-2xl mb-3 border border-zinc-700">
-                <i class="fa-solid fa-box-open"></i>
-            </div>
-            <h3 class="text-lg font-bold text-white">ยังไม่มีข้อมูลออเดอร์ในระบบ</h3>
-            <p class="text-sm text-zinc-400 mt-1 mb-4">คลิกปุ่ม "เพิ่มออเดอร์ใหม่" ด้านบนเพื่อเริ่มสร้างใบงานผลิตผ้า</p>
-            <button onclick="openNewOrderModal()" class="bg-amber-400 hover:bg-amber-500 text-zinc-950 font-bold px-4 py-2 rounded-xl text-sm transition">
-                เพิ่มออเดอร์แรก
-            </button>
+            <div class="w-16 h-16 bg-zinc-800 text-amber-400 rounded-full flex items-center justify-center text-2xl mb-3 border border-zinc-700"><i class="fa-solid fa-box-open"></i></div>
+            <h3 class="text-lg font-bold text-white">ยังไม่มีข้อมูลออเดอร์</h3>
+            <button onclick="openNewOrderModal()" class="mt-3 bg-amber-400 text-zinc-950 font-bold px-4 py-2 rounded-xl text-sm">เพิ่มออเดอร์แรก</button>
         </div>
     </main>
 
-    <!-- Modal Form (Create / Edit Order) -->
+    <!-- Modal -->
     <div id="order-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-zinc-900 w-full max-w-4xl rounded-2xl shadow-2xl border border-zinc-800 overflow-hidden flex flex-col max-h-[90vh]">
             <div class="bg-zinc-900 border-b border-zinc-800 text-white px-6 py-4 flex justify-between items-center">
-                <h3 id="modal-title" class="font-bold text-lg flex items-center gap-2 text-amber-400">
-                    <i class="fa-solid fa-file-circle-plus"></i> เพิ่มออเดอร์ผลิตผ้าใหม่
-                </h3>
-                <button onclick="closeModal()" class="text-zinc-400 hover:text-white text-xl p-1">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+                <h3 id="modal-title" class="font-bold text-lg text-amber-400">เพิ่มออเดอร์ผลิตผ้าใหม่</h3>
+                <button onclick="closeModal()" class="text-zinc-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
-            <form id="order-form" onsubmit="saveOrder(event)" class="p-6 overflow-y-auto space-y-5 flex-grow">
+            <form id="order-form" onsubmit="saveOrder(event)" class="p-6 overflow-y-auto space-y-4 flex-grow">
                 <input type="hidden" id="order-id">
                 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-zinc-300 mb-1">เลขที่ใบงาน / รหัสออเดอร์ *</label>
-                        <input type="text" id="order-code" required placeholder="เช่น ORD-2026-001" class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-400">
+                        <input type="text" id="order-code" required placeholder="เช่น ORD-001" class="w-full px-3.5 py-2 bg-zinc-950 border border-zinc-800 rounded-xl text-sm text-white focus:ring-2 focus:ring-amber-400">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-zinc-300 mb-1">ชื่อลูกค้า / แบรนด์ *</label>
-                        <input type="text" id="customer-name" required placeholder="เช่น บจก. แฟชั่นเฮาส์" class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-400">
+                        <input type="text" id="customer-name" required placeholder="ชื่อลูกค้า" class="w-full px-3.5 py-2 bg-zinc-950 border border-zinc-800 rounded-xl text-sm text-white focus:ring-2 focus:ring-amber-400">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-zinc-300 mb-1">ชนิดผ้า / ลายพิมพ์ *</label>
-                        <input type="text" id="fabric-type" required placeholder="เช่น คอตตอน 100% สีดำ" class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-400">
+                        <input type="text" id="fabric-type" required placeholder="ชนิดผ้า" class="w-full px-3.5 py-2 bg-zinc-950 border border-zinc-800 rounded-xl text-sm text-white focus:ring-2 focus:ring-amber-400">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-zinc-300 mb-1">กำหนดส่งงาน (ไม่เกิน 7 วัน) *</label>
-                        <input type="date" id="due-date" required class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-400">
-                        <p class="text-[11px] text-amber-400 mt-1"><i class="fa-solid fa-triangle-exclamation"></i> กำหนดเวลาสูงสุดไม่เกิน 7 วันนับจากวันนี้</p>
+                        <label class="block text-xs font-semibold text-zinc-300 mb-1">กำหนดส่งงาน (แก้ไขได้) *</label>
+                        <!-- ตั้งค่าเริ่มต้น +7 วันอัตโนมัติ แต่ผู้ใช้สามารถคลิกเปลี่ยนวันที่เองได้อิสระ -->
+                        <input type="date" id="due-date" required class="w-full px-3.5 py-2 bg-zinc-950 border border-zinc-800 rounded-xl text-sm text-white focus:ring-2 focus:ring-amber-400">
+                        <p class="text-[11px] text-amber-400 mt-0.5"><i class="fa-solid fa-circle-info"></i> ระบบใส่ล่วงหน้า 7 วันให้อัตโนมัติ สามารถกดเปลี่ยนวันที่ได้</p>
                     </div>
                 </div>
 
-                <!-- Image Upload Section -->
+                <!-- Image Upload -->
                 <div>
-                    <label class="block text-xs font-semibold text-zinc-300 mb-1">แนบรูปภาพตัวอย่างงาน / ลายผ้า (ถ้ามี)</label>
+                    <label class="block text-xs font-semibold text-zinc-300 mb-1">แนบรูปภาพตัวอย่าง (ถ้ามี)</label>
                     <div class="flex items-center gap-3">
-                        <label class="cursor-pointer bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-200 px-4 py-2 rounded-xl text-xs font-semibold transition flex items-center gap-2">
-                            <i class="fa-solid fa-image text-amber-400"></i> เลือกรูปภาพ
+                        <label class="cursor-pointer bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-200 px-3 py-1.5 rounded-xl text-xs font-semibold">
+                            <i class="fa-solid fa-image text-amber-400"></i> เลือกรูป
                             <input type="file" id="image-file-input" accept="image/*" onchange="handleImageUpload(event)" class="hidden">
                         </label>
-                        <span id="file-name-display" class="text-xs text-zinc-500 italic">ยังไม่ได้เลือกไฟล์รูปภาพ</span>
+                        <span id="file-name-display" class="text-xs text-zinc-500 italic">ยังไม่ได้เลือกไฟล์</span>
                     </div>
                     <input type="hidden" id="order-image-base64">
                     <div id="image-preview-container" class="mt-2 hidden">
-                        <img id="image-preview" src="" alt="Preview" class="w-24 h-24 object-cover rounded-xl border border-zinc-700 shadow-sm">
-                        <button type="button" onclick="removeImage()" class="text-xs text-red-400 mt-1 hover:underline block"><i class="fa-solid fa-trash"></i> ลบรูปภาพนี้</button>
+                        <img id="image-preview" src="" alt="Preview" class="w-20 h-20 object-cover rounded-xl border border-zinc-700">
+                        <button type="button" onclick="removeImage()" class="text-xs text-red-400 mt-1 hover:underline block"><i class="fa-solid fa-trash"></i> ลบรูป</button>
                     </div>
                 </div>
 
-                <!-- Size Categorization Tabs -->
-                <div class="border-t border-zinc-800 pt-4">
-                    <div class="flex items-center justify-between mb-3">
-                        <label class="text-sm font-bold text-white flex items-center gap-1.5">
-                            <i class="fa-solid fa-shirt text-amber-400"></i> เลือกหมวดหมู่ไซส์เสื้อผ้า
-                        </label>
-                        <!-- Tab Switcher Buttons -->
+                <!-- Sizes Selector -->
+                <div class="border-t border-zinc-800 pt-3">
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="text-sm font-bold text-white"><i class="fa-solid fa-shirt text-amber-400"></i> หมวดหมู่ไซส์</label>
                         <div class="flex bg-zinc-950 p-1 rounded-xl border border-zinc-800">
-                            <button type="button" onclick="switchSizeTab('kids')" id="tab-btn-kids" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-400 text-zinc-950 transition">👶 ไซส์เด็ก / เล็ก (24-30)</button>
-                            <button type="button" onclick="switchSizeTab('adult')" id="tab-btn-adult" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-400 hover:text-white transition">👕 ไซส์ผู้ใหญ่ (SS-5XL)</button>
+                            <button type="button" onclick="switchSizeTab('kids')" id="tab-btn-kids" class="px-3 py-1 rounded-lg text-xs font-bold bg-amber-400 text-zinc-950 transition">👶 ไซส์เด็ก (24-30)</button>
+                            <button type="button" onclick="switchSizeTab('adult')" id="tab-btn-adult" class="px-3 py-1 rounded-lg text-xs font-semibold text-zinc-400 hover:text-white transition">👕 ไซส์ผู้ใหญ่ (SS-5XL)</button>
                         </div>
                     </div>
 
-                    <!-- Kids / Small Sizes Panel (Including 24, 26, 28, 30) -->
-                    <div id="size-panel-kids" class="space-y-3">
-                        <p class="text-xs text-zinc-400">ไซส์เด็กเล็ก, เด็กโต และเบอร์พิเศษ (24, 26, 28, 30)</p>
-                        <div class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-8 gap-2">
-                            <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center">
-                                <label class="block text-[11px] font-bold text-amber-400 mb-1">เบอร์ 24</label>
-                                <input type="number" min="0" value="0" id="size-24" oninput="calculateTotal()" class="w-full text-center py-1 bg-zinc-900 border border-zinc-800 text-white rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-amber-400">
-                            </div>
-                            <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center">
-                                <label class="block text-[11px] font-bold text-amber-400 mb-1">เบอร์ 26</label>
-                                <input type="number" min="0" value="0" id="size-26" oninput="calculateTotal()" class="w-full text-center py-1 bg-zinc-900 border border-zinc-800 text-white rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-amber-400">
-                            </div>
-                            <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center">
-                                <label class="block text-[11px] font-bold text-amber-400 mb-1">เบอร์ 28</label>
-                                <input type="number" min="0" value="0" id="size-28" oninput="calculateTotal()" class="w-full text-center py-1 bg-zinc-900 border border-zinc-800 text-white rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-amber-400">
-                            </div>
-                            <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center">
-                                <label class="block text-[11px] font-bold text-amber-400 mb-1">เบอร์ 30</label>
-                                <input type="number" min="0" value="0" id="size-30" oninput="calculateTotal()" class="w-full text-center py-1 bg-zinc-900 border border-zinc-800 text-white rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-amber-400">
-                            </div>
-                            <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center">
-                                <label class="block text-[11px] font-bold text-zinc-300 mb-1">S(ด)</label>
-                                <input type="number" min="0" value="0" id="size-kids-s" oninput="calculateTotal()" class="w-full text-center py-1 bg-zinc-900 border border-zinc-800 text-white rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-amber-400">
-                            </div>
-                            <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center">
-                                <label class="block text-[11px] font-bold text-zinc-300 mb-1">M(ด)</label>
-                                <input type="number" min="0" value="0" id="size-kids-m" oninput="calculateTotal()" class="w-full text-center py-1 bg-zinc-900 border border-zinc-800 text-white rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-amber-400">
-                            </div>
-                            <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center">
-                                <label class="block text-[11px] font-bold text-zinc-300 mb-1">L(ด)</label>
-                                <input type="number" min="0" value="0" id="size-kids-l" oninput="calculateTotal()" class="w-full text-center py-1 bg-zinc-900 border border-zinc-800 text-white rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-amber-400">
-                            </div>
-                            <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center">
-                                <label class="block text-[11px] font-bold text-zinc-300 mb-1">XL(ด)</label>
-                                <input type="number" min="0" value="0" id="size-kids-xl" oninput="calculateTotal()" class="w-full text-center py-1 bg-zinc-900 border border-zinc-800 text-white rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-amber-400">
-                            </div>
-                        </div>
+                    <!-- Kids Panel -->
+                    <div id="size-panel-kids" class="grid grid-cols-4 sm:grid-cols-8 gap-2">
+                        <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center"><label class="block text-[10px] text-amber-400 font-bold mb-1">เบอร์ 24</label><input type="number" min="0" value="0" id="size-24" oninput="calculateTotal()" class="w-full text-center bg-zinc-900 border border-zinc-800 text-white rounded text-xs py-1"></div>
+                        <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center"><label class="block text-[10px] text-amber-400 font-bold mb-1">เบอร์ 26</label><input type="number" min="0" value="0" id="size-26" oninput="calculateTotal()" class="w-full text-center bg-zinc-900 border border-zinc-800 text-white rounded text-xs py-1"></div>
+                        <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center"><label class="block text-[10px] text-amber-400 font-bold mb-1">เบอร์ 28</label><input type="number" min="0" value="0" id="size-28" oninput="calculateTotal()" class="w-full text-center bg-zinc-900 border border-zinc-800 text-white rounded text-xs py-1"></div>
+                        <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center"><label class="block text-[10px] text-amber-400 font-bold mb-1">เบอร์ 30</label><input type="number" min="0" value="0" id="size-30" oninput="calculateTotal()" class="w-full text-center bg-zinc-900 border border-zinc-800 text-white rounded text-xs py-1"></div>
+                        <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center"><label class="block text-[10px] text-zinc-300 font-bold mb-1">S(ด)</label><input type="number" min="0" value="0" id="size-kids-s" oninput="calculateTotal()" class="w-full text-center bg-zinc-900 border border-zinc-800 text-white rounded text-xs py-1"></div>
+                        <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center"><label class="block text-[10px] text-zinc-300 font-bold mb-1">M(ด)</label><input type="number" min="0" value="0" id="size-kids-m" oninput="calculateTotal()" class="w-full text-center bg-zinc-900 border border-zinc-800 text-white rounded text-xs py-1"></div>
+                        <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center"><label class="block text-[10px] text-zinc-300 font-bold mb-1">L(ด)</label><input type="number" min="0" value="0" id="size-kids-l" oninput="calculateTotal()" class="w-full text-center bg-zinc-900 border border-zinc-800 text-white rounded text-xs py-1"></div>
+                        <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center"><label class="block text-[10px] text-zinc-300 font-bold mb-1">XL(ด)</label><input type="number" min="0" value="0" id="size-kids-xl" oninput="calculateTotal()" class="w-full text-center bg-zinc-900 border border-zinc-800 text-white rounded text-xs py-1"></div>
                     </div>
 
-                    <!-- Adult Sizes Panel -->
-                    <div id="size-panel-adult" class="space-y-3 hidden">
-                        <p class="text-xs text-zinc-400">ไซส์มาตรฐานผู้ใหญ่ เรียงจากเล็กไปใหญ่ (SS ถึง 5XL)</p>
-                        <div class="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 gap-2">
-                            <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center">
-                                <label class="block text-[11px] font-bold text-zinc-200 mb-1">SS</label>
-                                <input type="number" min="0" value="0" id="size-ss" oninput="calculateTotal()" class="w-full text-center py-1 bg-zinc-900 border border-zinc-800 text-white rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-amber-400">
-                            </div>
-                            <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center">
-                                <label class="block text-[11px] font-bold text-zinc-200 mb-1">S</label>
-                                <input type="number" min="0" value="0" id="size-s" oninput="calculateTotal()" class="w-full text-center py-1 bg-zinc-900 border border-zinc-800 text-white rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-amber-400">
-                            </div>
-                            <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center">
-                                <label class="block text-[11px] font-bold text-zinc-200 mb-1">M</label>
-                                <input type="number" min="0" value="0" id="size-m" oninput="calculateTotal()" class="w-full text-center py-1 bg-zinc-900 border border-zinc-800 text-white rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-amber-400">
-                            </div>
-                            <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center">
-                                <label class="block text-[11px] font-bold text-zinc-200 mb-1">L</label>
-                                <input type="number" min="0" value="0" id="size-l" oninput="calculateTotal()" class="w-full text-center py-1 bg-zinc-900 border border-zinc-800 text-white rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-amber-400">
-                            </div>
-                            <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center">
-                                <label class="block text-[11px] font-bold text-zinc-200 mb-1">XL</label>
-                                <input type="number" min="0" value="0" id="size-xl" oninput="calculateTotal()" class="w-full text-center py-1 bg-zinc-900 border border-zinc-800 text-white rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-amber-400">
-                            </div>
-                            <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center">
-                                <label class="block text-[11px] font-bold text-zinc-200 mb-1">2XL</label>
-                                <input type="number" min="0" value="0" id="size-2xl" oninput="calculateTotal()" class="w-full text-center py-1 bg-zinc-900 border border-zinc-800 text-white rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-amber-400">
-                            </div>
-                            <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center">
-                                <label class="block text-[11px] font-bold text-zinc-200 mb-1">3XL</label>
-                                <input type="number" min="0" value="0" id="size-3xl" oninput="calculateTotal()" class="w-full text-center py-1 bg-zinc-900 border border-zinc-800 text-white rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-amber-400">
-                            </div>
-                            <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center">
-                                <label class="block text-[11px] font-bold text-zinc-200 mb-1">4XL</label>
-                                <input type="number" min="0" value="0" id="size-4xl" oninput="calculateTotal()" class="w-full text-center py-1 bg-zinc-900 border border-zinc-800 text-white rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-amber-400">
-                            </div>
-                            <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center">
-                                <label class="block text-[11px] font-bold text-zinc-200 mb-1">5XL</label>
-                                <input type="number" min="0" value="0" id="size-5xl" oninput="calculateTotal()" class="w-full text-center py-1 bg-zinc-900 border border-zinc-800 text-white rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-amber-400">
-                            </div>
-                        </div>
+                    <!-- Adult Panel -->
+                    <div id="size-panel-adult" class="grid grid-cols-3 sm:grid-cols-9 gap-2 hidden">
+                        <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center"><label class="block text-[10px] text-zinc-300 font-bold mb-1">SS</label><input type="number" min="0" value="0" id="size-ss" oninput="calculateTotal()" class="w-full text-center bg-zinc-900 border border-zinc-800 text-white rounded text-xs py-1"></div>
+                        <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center"><label class="block text-[10px] text-zinc-300 font-bold mb-1">S</label><input type="number" min="0" value="0" id="size-s" oninput="calculateTotal()" class="w-full text-center bg-zinc-900 border border-zinc-800 text-white rounded text-xs py-1"></div>
+                        <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center"><label class="block text-[10px] text-zinc-300 font-bold mb-1">M</label><input type="number" min="0" value="0" id="size-m" oninput="calculateTotal()" class="w-full text-center bg-zinc-900 border border-zinc-800 text-white rounded text-xs py-1"></div>
+                        <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center"><label class="block text-[10px] text-zinc-300 font-bold mb-1">L</label><input type="number" min="0" value="0" id="size-l" oninput="calculateTotal()" class="w-full text-center bg-zinc-900 border border-zinc-800 text-white rounded text-xs py-1"></div>
+                        <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center"><label class="block text-[10px] text-zinc-300 font-bold mb-1">XL</label><input type="number" min="0" value="0" id="size-xl" oninput="calculateTotal()" class="w-full text-center bg-zinc-900 border border-zinc-800 text-white rounded text-xs py-1"></div>
+                        <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center"><label class="block text-[10px] text-zinc-300 font-bold mb-1">2XL</label><input type="number" min="0" value="0" id="size-2xl" oninput="calculateTotal()" class="w-full text-center bg-zinc-900 border border-zinc-800 text-white rounded text-xs py-1"></div>
+                        <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center"><label class="block text-[10px] text-zinc-300 font-bold mb-1">3XL</label><input type="number" min="0" value="0" id="size-3xl" oninput="calculateTotal()" class="w-full text-center bg-zinc-900 border border-zinc-800 text-white rounded text-xs py-1"></div>
+                        <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center"><label class="block text-[10px] text-zinc-300 font-bold mb-1">4XL</label><input type="number" min="0" value="0" id="size-4xl" oninput="calculateTotal()" class="w-full text-center bg-zinc-900 border border-zinc-800 text-white rounded text-xs py-1"></div>
+                        <div class="bg-zinc-950 p-2 rounded-xl border border-zinc-800 text-center"><label class="block text-[10px] text-zinc-300 font-bold mb-1">5XL</label><input type="number" min="0" value="0" id="size-5xl" oninput="calculateTotal()" class="w-full text-center bg-zinc-900 border border-zinc-800 text-white rounded text-xs py-1"></div>
                     </div>
-                    
-                    <div class="mt-4 flex justify-between items-center bg-zinc-950 px-4 py-2.5 rounded-xl border border-zinc-800">
-                        <span class="text-xs font-bold text-zinc-300">จำนวนรวมทั้งสิ้นทุกไซส์:</span>
+
+                    <div class="mt-3 flex justify-between items-center bg-zinc-950 px-4 py-2 rounded-xl border border-zinc-800">
+                        <span class="text-xs font-bold text-zinc-300">จำนวนรวมทั้งหมด:</span>
                         <span id="total-qty-display" class="text-sm font-bold text-amber-400">0 ตัว</span>
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-zinc-300 mb-1">หมายเหตุเพิ่มเติม (ถ้ามี)</label>
-                    <textarea id="order-note" rows="2" placeholder="รายละเอียดสีผ้า, จุดสังเกตพิเศษ..." class="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-400"></textarea>
+                    <label class="block text-xs font-semibold text-zinc-300 mb-1">หมายเหตุ</label>
+                    <textarea id="order-note" rows="2" placeholder="รายละเอียดเพิ่มเติม..." class="w-full px-3.5 py-2 bg-zinc-950 border border-zinc-800 rounded-xl text-sm text-white"></textarea>
                 </div>
 
-                <div class="pt-2 flex justify-end gap-3 sticky bottom-0 bg-zinc-900 py-2 border-t border-zinc-800">
-                    <button type="button" onclick="closeModal()" class="px-4 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-medium rounded-xl text-sm transition">ยกเลิก</button>
-                    <button type="submit" id="save-btn" class="px-5 py-2.5 bg-amber-400 hover:bg-amber-500 text-zinc-950 font-bold rounded-xl text-sm shadow-md transition">บันทึกออเดอร์</button>
+                <div class="pt-2 flex justify-end gap-3 border-t border-zinc-800">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 bg-zinc-800 text-zinc-300 rounded-xl text-sm">ยกเลิก</button>
+                    <button type="submit" id="save-btn" class="px-5 py-2 bg-amber-400 text-zinc-950 font-bold rounded-xl text-sm">บันทึก</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Lightbox Modal for Image View -->
-    <div id="lightbox-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden" onclick="closeLightbox()">
-        <div class="relative max-w-3xl max-h-[90vh]">
-            <img id="lightbox-img" src="" alt="Full view" class="max-w-full max-h-[85vh] rounded-2xl shadow-2xl object-contain mx-auto border border-zinc-800">
-            <p class="text-zinc-400 text-center text-sm mt-3"><i class="fa-solid fa-circle-info"></i> คลิกที่ใดก็ได้เพื่อปิดรูปภาพ</p>
-        </div>
+    <!-- Lightbox -->
+    <div id="lightbox-modal" class="fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-4 hidden" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" class="max-w-full max-h-[85vh] rounded-xl object-contain">
     </div>
 
-    <!-- Alert Modal -->
-    <div id="alert-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-zinc-900 border border-zinc-800 w-full max-w-sm rounded-2xl shadow-xl p-6 text-center">
-            <div id="alert-icon" class="w-14 h-14 rounded-full flex items-center justify-center text-2xl mx-auto mb-3">
-                <i class="fa-solid fa-check"></i>
-            </div>
-            <h4 id="alert-title" class="font-bold text-lg text-white mb-1">แจ้งเตือน</h4>
-            <p id="alert-message" class="text-sm text-zinc-400 mb-6">ข้อความแจ้งเตือน</p>
-            <button onclick="closeAlert()" class="w-full py-2.5 bg-amber-400 hover:bg-amber-500 text-zinc-950 font-bold rounded-xl text-sm transition shadow">ตกลง</button>
-        </div>
-    </div>
-
-    <footer class="bg-zinc-900 border-t border-zinc-800 mt-12 py-4 text-center text-xs text-zinc-500">
-        <p>ระบบติดตามงานโรงงานทำผ้าแบบเรียลไทม์ (Fabric Production Realtime Tracker) &copy; 2026</p>
-    </footer>
-
-    <!-- Firebase SDK Imports -->
+    <!-- Script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, doc, setDoc, updateDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'fabric-tracker-default';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-            apiKey: "AIzaSyDummyKeyForLocalTestingOnlyWithoutAuth",
-            authDomain: "dummy.firebaseapp.com",
-            projectId: "dummy-project"
-        };
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : { apiKey: "dummy", projectId: "dummy" };
 
-        let app, db, auth;
+        let db, auth;
         try {
-            app = initializeApp(firebaseConfig);
+            const app = initializeApp(firebaseConfig);
             db = getFirestore(app);
             auth = getAuth(app);
-        } catch (e) {
-            console.error("Firebase init error:", e);
-        }
+            signInAnonymously(auth).catch(() => {});
+        } catch (e) {}
 
         let orders = [];
         let currentFilter = 'all';
-
         const sizeKeys = ['24', '26', '28', '30', 'kids-s', 'kids-m', 'kids-l', 'kids-xl', 'ss', 's', 'm', 'l', 'xl', '2xl', '3xl', '4xl', '5xl'];
-        const sizeLabels = {
-            '24': '24', '26': '26', '28': '28', '30': '30',
-            'kids-s': 'S(ด)', 'kids-m': 'M(ด)', 'kids-l': 'L(ด)', 'kids-xl': 'XL(ด)',
-            'ss': 'SS', 's': 'S', 'm': 'M', 'l': 'L', 'xl': 'XL',
-            '2xl': '2XL', '3xl': '3XL', '4xl': '4XL', '5xl': '5XL'
-        };
+        const sizeLabels = {'24':'24','26':'26','28':'28','30':'30','kids-s':'S(ด)','kids-m':'M(ด)','kids-l':'L(ด)','kids-xl':'XL(ด)','ss':'SS','s':'S','m':'M','l':'L','xl':'XL','2xl':'2XL','3xl':'3XL','4xl':'4XL','5xl':'5XL'};
 
-        window.addEventListener('DOMContentLoaded', async () => {
-            setupDateConstraints();
-            
-            if (auth) {
-                try {
-                    const token = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : undefined;
-                    if (token) {
-                        await signInWithCustomToken(auth, token);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
-                } catch (err) {
-                    console.warn("Auth warning, trying anonymous fallback:", err);
-                    try { await signInAnonymously(auth); } catch (e) {}
-                }
-
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        document.getElementById('connection-dot').className = 'w-2 h-2 rounded-full bg-emerald-400';
-                        document.getElementById('connection-text').innerText = 'เชื่อมต่อออนไลน์เรียลไทม์แล้ว';
-                        initRealtimeListener();
-                    } else {
-                        document.getElementById('connection-dot').className = 'w-2 h-2 rounded-full bg-red-500';
-                        document.getElementById('connection-text').innerText = 'ยังไม่ได้เข้าสู่ระบบ';
-                    }
-                });
-            } else {
-                document.getElementById('loading-state').classList.add('hidden');
-                document.getElementById('empty-state').classList.remove('hidden');
+        window.addEventListener('DOMContentLoaded', () => {
+            if (db) {
+                const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'orders');
+                onSnapshot(colRef, (snapshot) => {
+                    orders = [];
+                    snapshot.forEach(d => orders.push({ id: d.id, ...d.data() }));
+                    orders.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+                    document.getElementById('loading-state').classList.add('hidden');
+                    renderOrders();
+                }, () => { document.getElementById('loading-state').innerHTML = '<p class="text-red-400">โหลดข้อมูลล้มเหลว</p>'; });
             }
         });
 
-        function initRealtimeListener() {
-            try {
-                const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'orders');
-                
-                onSnapshot(colRef, (snapshot) => {
-                    orders = [];
-                    snapshot.forEach((docSnap) => {
-                        orders.push({ id: docSnap.id, ...docSnap.data() });
-                    });
-                    
-                    orders.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
-
-                    document.getElementById('loading-state').classList.add('hidden');
-                    renderOrders();
-                }, (error) => {
-                    console.error("Firestore snapshot error:", error);
-                    document.getElementById('loading-state').innerHTML = `<p class="text-sm text-red-400">เกิดข้อผิดพลาดในการโหลดข้อมูล: ${error.message}</p>`;
-                });
-            } catch (e) {
-                console.error("Error setting up snapshot:", e);
-            }
+        // ตั้งค่าวันอัตโนมัติ (+7 วันจากวันนี้) แต่เปิดให้ผู้ใช้เลือกเปลี่ยนเองได้
+        function setDefaultDueDate() {
+            const d = new Date();
+            d.setDate(d.getDate() + 7);
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            document.getElementById('due-date').value = `${year}-${month}-${day}`;
         }
 
-        function setupDateConstraints() {
-            const today = new Date();
-            const maxDate = new Date();
-            maxDate.setDate(today.getDate() + 7);
-
-            const formatDate = (d) => {
-                let month = '' + (d.getMonth() + 1),
-                    day = '' + d.getDate(),
-                    year = d.getFullYear();
-                if (month.length < 2) month = '0' + month;
-                if (day.length < 2) day = '0' + day;
-                return [year, month, day].join('-');
-            };
-
-            const dueDateInput = document.getElementById('due-date');
-            dueDateInput.min = formatDate(today);
-            dueDateInput.max = formatDate(maxDate);
-            dueDateInput.value = formatDate(maxDate);
-        }
-
-        window.switchSizeTab = function(tabName) {
-            const kidsPanel = document.getElementById('size-panel-kids');
-            const adultPanel = document.getElementById('size-panel-adult');
-            const kidsBtn = document.getElementById('tab-btn-kids');
-            const adultBtn = document.getElementById('tab-btn-adult');
-
-            if (tabName === 'kids') {
-                kidsPanel.classList.remove('hidden');
-                adultPanel.classList.add('hidden');
-                kidsBtn.className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-400 text-zinc-950 transition";
-                adultBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-400 hover:text-white transition";
-            } else {
-                kidsPanel.classList.add('hidden');
-                adultPanel.classList.remove('hidden');
-                adultBtn.className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-400 text-zinc-950 transition";
-                kidsBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-400 hover:text-white transition";
-            }
+        window.switchSizeTab = function(tab) {
+            document.getElementById('size-panel-kids').classList.toggle('hidden', tab !== 'kids');
+            document.getElementById('size-panel-adult').classList.toggle('hidden', tab !== 'adult');
+            document.getElementById('tab-btn-kids').className = tab === 'kids' ? "px-3 py-1 rounded-lg text-xs font-bold bg-amber-400 text-zinc-950 transition" : "px-3 py-1 rounded-lg text-xs font-semibold text-zinc-400 hover:text-white transition";
+            document.getElementById('tab-btn-adult').className = tab === 'adult' ? "px-3 py-1 rounded-lg text-xs font-bold bg-amber-400 text-zinc-950 transition" : "px-3 py-1 rounded-lg text-xs font-semibold text-zinc-400 hover:text-white transition";
         };
 
         window.calculateTotal = function() {
             let total = 0;
-            sizeKeys.forEach(key => {
-                const val = parseInt(document.getElementById(`size-${key}`).value) || 0;
-                total += val;
-            });
+            sizeKeys.forEach(k => total += parseInt(document.getElementById(`size-${k}`).value) || 0);
             document.getElementById('total-qty-display').innerText = total.toLocaleString() + ' ตัว';
             return total;
         };
 
-        window.handleImageUpload = function(event) {
-            const file = event.target.files[0];
+        window.handleImageUpload = function(e) {
+            const file = e.target.files[0];
             if (!file) return;
-
             document.getElementById('file-name-display').innerText = file.name;
-
             const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64String = e.target.result;
-                document.getElementById('order-image-base64').value = base64String;
-                document.getElementById('image-preview').src = base64String;
+            reader.onload = (ev) => {
+                document.getElementById('order-image-base64').value = ev.target.result;
+                document.getElementById('image-preview').src = ev.target.result;
                 document.getElementById('image-preview-container').classList.remove('hidden');
             };
             reader.readAsDataURL(file);
@@ -489,71 +295,50 @@
         window.removeImage = function() {
             document.getElementById('order-image-base64').value = '';
             document.getElementById('image-file-input').value = '';
-            document.getElementById('file-name-display').innerText = 'ยังไม่ได้เลือกไฟล์รูปภาพ';
+            document.getElementById('file-name-display').innerText = 'ยังไม่ได้เลือกไฟล์';
             document.getElementById('image-preview-container').classList.add('hidden');
         };
 
-        window.openLightbox = function(imgSrc) {
-            if (!imgSrc) return;
-            document.getElementById('lightbox-img').src = imgSrc;
-            document.getElementById('lightbox-modal').classList.remove('hidden');
-        };
-
-        window.closeLightbox = function() {
-            document.getElementById('lightbox-modal').classList.add('hidden');
-        };
-
         window.openNewOrderModal = function() {
-            document.getElementById('modal-title').innerHTML = '<i class="fa-solid fa-file-circle-plus"></i> เพิ่มออเดอร์ผลิตผ้าใหม่';
+            document.getElementById('modal-title').innerText = 'เพิ่มออเดอร์ผลิตผ้าใหม่';
             document.getElementById('order-form').reset();
             document.getElementById('order-id').value = '';
-            window.removeImage();
-            setupDateConstraints();
+            removeImage();
+            setDefaultDueDate();
             switchSizeTab('kids');
-            sizeKeys.forEach(k => {
-                document.getElementById(`size-${k}`).value = 0;
-            });
-            window.calculateTotal();
+            sizeKeys.forEach(k => document.getElementById(`size-${k}`).value = 0);
+            calculateTotal();
             document.getElementById('order-modal').classList.remove('hidden');
         };
 
         window.openEditModal = function(id) {
-            const order = orders.find(o => o.id === id);
-            if (!order) return;
-
-            document.getElementById('modal-title').innerHTML = '<i class="fa-solid fa-pen-to-square"></i> แก้ไขใบงานออเดอร์ ' + order.code;
-            document.getElementById('order-id').value = order.id;
-            document.getElementById('order-code').value = order.code;
-            document.getElementById('customer-name').value = order.customer;
-            document.getElementById('fabric-type').value = order.fabric;
-            document.getElementById('due-date').value = order.dueDate;
-            document.getElementById('order-note').value = order.note || '';
-
-            sizeKeys.forEach(k => {
-                document.getElementById(`size-${k}`).value = (order.sizes && order.sizes[k]) ? order.sizes[k] : 0;
-            });
-
-            if (order.imageBase64) {
-                document.getElementById('order-image-base64').value = order.imageBase64;
-                document.getElementById('image-preview').src = order.imageBase64;
+            const o = orders.find(x => x.id === id);
+            if (!o) return;
+            document.getElementById('modal-title').innerText = 'แก้ไขออเดอร์ ' + o.code;
+            document.getElementById('order-id').value = o.id;
+            document.getElementById('order-code').value = o.code;
+            document.getElementById('customer-name').value = o.customer;
+            document.getElementById('fabric-type').value = o.fabric;
+            document.getElementById('due-date').value = o.dueDate;
+            document.getElementById('order-note').value = o.note || '';
+            sizeKeys.forEach(k => document.getElementById(`size-${k}`).value = o.sizes?.[k] || 0);
+            if (o.imageBase64) {
+                document.getElementById('order-image-base64').value = o.imageBase64;
+                document.getElementById('image-preview').src = o.imageBase64;
                 document.getElementById('image-preview-container').classList.remove('hidden');
                 document.getElementById('file-name-display').innerText = 'มีรูปภาพแนบอยู่แล้ว';
-            } else {
-                window.removeImage();
-            }
-
+            } else { removeImage(); }
             switchSizeTab('kids');
-            window.calculateTotal();
+            calculateTotal();
             document.getElementById('order-modal').classList.remove('hidden');
         };
 
-        window.closeModal = function() {
-            document.getElementById('order-modal').classList.add('hidden');
-        };
+        window.closeModal = () => document.getElementById('order-modal').classList.add('hidden');
+        window.openLightbox = (src) => { document.getElementById('lightbox-img').src = src; document.getElementById('lightbox-modal').classList.remove('hidden'); };
+        window.closeLightbox = () => document.getElementById('lightbox-modal').classList.add('hidden');
 
-        window.saveOrder = async function(event) {
-            event.preventDefault();
-            
+        window.saveOrder = async function(e) {
+            e.preventDefault();
             const id = document.getElementById('order-id').value;
             const code = document.getElementById('order-code').value.trim();
             const customer = document.getElementById('customer-name').value.trim();
@@ -561,181 +346,83 @@
             const dueDate = document.getElementById('due-date').value;
             const note = document.getElementById('order-note').value.trim();
             const imageBase64 = document.getElementById('order-image-base64').value;
-
+            
             const sizes = {};
-            sizeKeys.forEach(k => {
-                sizes[k] = parseInt(document.getElementById(`size-${k}`).value) || 0;
-            });
+            sizeKeys.forEach(k => sizes[k] = parseInt(document.getElementById(`size-${k}`).value) || 0);
             const totalQty = Object.values(sizes).reduce((a, b) => a + b, 0);
 
-            if (totalQty <= 0) {
-                showCustomAlert('กรุณากรอกจำนวนเสื้อผ้าอย่างน้อย 1 ไซส์', 'error');
-                return;
-            }
+            if (totalQty <= 0) { alert('กรุณากรอกจำนวนอย่างน้อย 1 ไซส์'); return; }
 
-            const maxDateObj = new Date();
-            maxDateObj.setDate(maxDateObj.getDate() + 7);
-            const maxDateStr = maxDateObj.toISOString().split('T')[0];
-
-            if (dueDate > maxDateStr) {
-                showCustomAlert('กำหนดส่งงานต้องไม่เกิน 7 วันนับจากวันนี้', 'error');
-                return;
-            }
-
-            const saveBtn = document.getElementById('save-btn');
-            saveBtn.disabled = true;
-            saveBtn.innerText = 'กำลังบันทึก...';
-
+            const btn = document.getElementById('save-btn');
+            btn.disabled = true; btn.innerText = 'กำลังบันทึก...';
             try {
                 if (id) {
-                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'orders', id);
-                    await updateDoc(docRef, {
-                        code, customer, fabric, dueDate, sizes, totalQty, note, imageBase64
-                    });
-                    showCustomAlert('อัปเดตใบงานเรียบร้อยแล้ว', 'success');
+                    await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'orders', id), { code, customer, fabric, dueDate, sizes, totalQty, note, imageBase64 });
                 } else {
                     const newId = 'ORD-' + Date.now();
-                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'orders', newId);
-                    await setDoc(docRef, {
-                        code,
-                        customer,
-                        fabric,
-                        dueDate,
-                        sizes,
-                        totalQty,
-                        note,
-                        imageBase64,
-                        steps: {
-                            print: { checked: false, time: null },
-                            cut: { checked: false, time: null },
-                            sewSend: { checked: false, time: null },
-                            sewReceive: { checked: false, time: null },
-                            pack: { checked: false, time: null }
-                        },
-                        timestamp: new Date().toISOString(),
-                        createdAt: getCurrentTimestamp()
+                    await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'orders', newId), {
+                        code, customer, fabric, dueDate, sizes, totalQty, note, imageBase64,
+                        steps: { print:{checked:false,time:null}, cut:{checked:false,time:null}, sewSend:{checked:false,time:null}, sewReceive:{checked:false,time:null}, pack:{checked:false,time:null} },
+                        timestamp: new Date().toISOString(), createdAt: new Date().toLocaleDateString('th-TH')
                     });
-                    showCustomAlert('สร้างออเดอร์ใหม่สำเร็จแล้ว', 'success');
                 }
-                window.closeModal();
-            } catch (e) {
-                console.error("Save error:", e);
-                showCustomAlert('เกิดข้อผิดพลาดในการบันทึก: ' + e.message, 'error');
-            } finally {
-                saveBtn.disabled = false;
-                saveBtn.innerText = 'บันทึกออเดอร์';
-            }
+                closeModal();
+            } catch(err) { alert('บันทึกไม่สำเร็จ: ' + err.message); }
+            finally { btn.disabled = false; btn.innerText = 'บันทึก'; }
         };
 
         window.deleteOrder = async function(id) {
-            if (confirm('คุณต้องการลบออเดอร์นี้ใช่หรือไม่? ข้อมูลจะถูกลบจากทุกเครื่องทันที')) {
-                try {
-                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'orders', id);
-                    await deleteDoc(docRef);
-                    showCustomAlert('ลบออเดอร์เรียบร้อยแล้ว', 'success');
-                } catch (e) {
-                    console.error("Delete error:", e);
-                    showCustomAlert('ไม่สามารถลบได้: ' + e.message, 'error');
-                }
+            if (confirm('ต้องการลบออเดอร์นี้ใช่หรือไม่?')) {
+                try { await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'orders', id)); } catch(e) { alert('ลบไม่สำเร็จ'); }
             }
         };
 
         window.toggleStep = async function(orderId, stepKey) {
-            const order = orders.find(o => o.id === orderId);
-            if (!order) return;
-
-            const steps = order.steps || {};
-            const currentStepState = steps[stepKey] || { checked: false, time: null };
-            
-            const newChecked = !currentStepState.checked;
-            const newTime = newChecked ? getCurrentTimestamp() : null;
-
-            steps[stepKey] = {
-                checked: newChecked,
-                time: newTime
-            };
-
-            try {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'orders', orderId);
-                await updateDoc(docRef, { steps });
-            } catch (e) {
-                console.error("Toggle step error:", e);
-                showCustomAlert('ไม่สามารถอัปเดตขั้นตอนได้: ' + e.message, 'error');
-            }
+            const o = orders.find(x => x.id === orderId);
+            if (!o) return;
+            const steps = o.steps || {};
+            const isChecked = !(steps[stepKey]?.checked);
+            const time = isChecked ? new Date().toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'}) : null;
+            steps[stepKey] = { checked: isChecked, time: isChecked ? time : null };
+            try { await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'orders', orderId), { steps }); } catch(e){}
         };
-
-        function getCurrentTimestamp() {
-            const now = new Date();
-            const day = String(now.getDate()).padStart(2, '0');
-            const month = String(now.getMonth() + 1).padStart(2, '0');
-            const year = now.getFullYear();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const mins = String(now.getMinutes()).padStart(2, '0');
-            return `${day}/${month}/${year} ${hours}:${mins}`;
-        }
-
-        function getOrderStatus(order) {
-            const steps = order.steps || {};
-            const isPackDone = steps.pack && steps.pack.checked;
-            const today = new Date().toISOString().split('T')[0];
-            const isOverdue = order.dueDate < today && !isPackDone;
-
-            if (isPackDone) {
-                return { color: 'green', text: 'เสร็จสิ้น (แพ็คแล้ว)', badgeClass: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20', dotClass: 'bg-emerald-400' };
-            }
-
-            const checkedCount = Object.values(steps).filter(s => s && s.checked).length;
-
-            if (checkedCount === 0 || isOverdue) {
-                let txt = 'รอดำเนินการ (ยังไม่เริ่ม)';
-                if (isOverdue) txt = '⚠️ เลยกำหนดส่ง!';
-                return { color: 'red', text: txt, badgeClass: 'bg-red-500/10 text-red-400 border-red-500/20', dotClass: 'bg-red-500 animate-pulse' };
-            } else {
-                return { color: 'blue', text: `กำลังดำเนินการ (${checkedCount}/5 ขั้นตอน)`, badgeClass: 'bg-amber-400/10 text-amber-400 border-amber-400/20', dotClass: 'bg-amber-400 animate-pulse' };
-            }
-        }
 
         window.filterStatus = function(status) {
             currentFilter = status;
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.className = "filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition";
-            });
-            const activeBtn = document.getElementById(`filter-btn-${status}`);
-            if (activeBtn) {
-                activeBtn.className = "filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-amber-400 text-zinc-950 transition";
-            }
+            document.querySelectorAll('.filter-btn').forEach(b => b.className = "filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition");
+            document.getElementById(`filter-btn-${status}`).className = "filter-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-amber-400 text-zinc-950 transition";
             renderOrders();
         };
+
+        function getOrderStatus(order) {
+            const steps = order.steps || {};
+            const isPackDone = steps.pack?.checked;
+            const today = new Date().toISOString().split('T')[0];
+            const isOverdue = order.dueDate < today && !isPackDone;
+            if (isPackDone) return { color: 'green', text: 'สำเร็จ (แพ็คแล้ว)', badge: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20', dot: 'bg-emerald-400' };
+            const checkedCount = Object.values(steps).filter(s => s?.checked).length;
+            if (checkedCount === 0 || isOverdue) return { color: 'red', text: isOverdue ? '⚠️ เลยกำหนด!' : 'รอดำเนินการ', badge: 'bg-red-500/10 text-red-400 border-red-500/20', dot: 'bg-red-500 animate-pulse' };
+            return { color: 'blue', text: `กำลังทำ (${checkedCount}/5)`, badge: 'bg-amber-400/10 text-amber-400 border-amber-400/20', dot: 'bg-amber-400 animate-pulse' };
+        }
 
         function renderOrders() {
             const container = document.getElementById('orders-container');
             const emptyState = document.getElementById('empty-state');
-            const searchInput = document.getElementById('search-input').value.toLowerCase();
+            const search = document.getElementById('search-input').value.toLowerCase();
 
-            let totalCount = orders.length;
-            let redCount = 0;
-            let blueCount = 0;
-            let greenCount = 0;
-
+            let total = orders.length, red = 0, blue = 0, green = 0;
             orders.forEach(o => {
-                const status = getOrderStatus(o);
-                if (status.color === 'red') redCount++;
-                else if (status.color === 'blue') blueCount++;
-                else if (status.color === 'green') greenCount++;
+                const s = getOrderStatus(o);
+                if (s.color === 'red') red++; else if (s.color === 'blue') blue++; else if (s.color === 'green') green++;
             });
+            document.getElementById('stat-total').innerText = total;
+            document.getElementById('stat-red').innerText = red;
+            document.getElementById('stat-blue').innerText = blue;
+            document.getElementById('stat-green').innerText = green;
 
-            document.getElementById('stat-total').innerText = totalCount;
-            document.getElementById('stat-red').innerText = redCount;
-            document.getElementById('stat-blue').innerText = blueCount;
-            document.getElementById('stat-green').innerText = greenCount;
-
-            let filtered = orders.filter(o => {
-                const status = getOrderStatus(o);
-                const matchesFilter = (currentFilter === 'all' || status.color === currentFilter);
-                const matchesSearch = (o.code || '').toLowerCase().includes(searchInput) ||
-                                      (o.customer || '').toLowerCase().includes(searchInput) ||
-                                      (o.fabric || '').toLowerCase().includes(searchInput);
-                return matchesFilter && matchesSearch;
+            const filtered = orders.filter(o => {
+                const s = getOrderStatus(o);
+                return (currentFilter === 'all' || s.color === currentFilter) && ((o.code||'').toLowerCase().includes(search) || (o.customer||'').toLowerCase().includes(search));
             });
 
             if (filtered.length === 0) {
@@ -744,191 +431,64 @@
                 emptyState.classList.add('flex');
                 return;
             }
-
-            emptyState.classList.remove('flex');
-            emptyState.classList.add('hidden');
+            emptyState.classList.remove('flex'); emptyState.classList.add('hidden');
 
             let html = '';
-            filtered.forEach(order => {
-                const status = getOrderStatus(order);
-                const sizes = order.sizes || {};
-                const steps = order.steps || {};
-                const dueDateStr = order.dueDate || '';
-                const dateParts = dueDateStr.split('-');
-                const formattedDueDate = dateParts.length === 3 ? `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}` : dueDateStr;
-
-                let activeSizesHtml = '';
+            filtered.forEach(o => {
+                const s = getOrderStatus(o);
+                let sizesHtml = '';
                 sizeKeys.forEach(k => {
-                    const qty = sizes[k] || 0;
-                    if (qty > 0) {
-                        activeSizesHtml += `
-                            <div class="bg-zinc-950 p-1.5 rounded-lg border border-zinc-800 text-center">
-                                <span class="block text-[10px] text-zinc-500 font-semibold">${sizeLabels[k]}</span>
-                                <span class="text-xs font-bold text-zinc-200">${qty}</span>
-                            </div>
-                        `;
-                    }
+                    if (o.sizes?.[k] > 0) sizesHtml += `<div class="bg-zinc-950 p-1 rounded border border-zinc-800 text-center"><span class="block text-[9px] text-zinc-500">${sizeLabels[k]}</span><span class="text-xs font-bold text-zinc-200">${o.sizes[k]}</span></div>`;
                 });
 
-                const step1 = steps.print || { checked: false, time: null };
-                const step2 = steps.cut || { checked: false, time: null };
-                const step3 = steps.sewSend || { checked: false, time: null };
-                const step4 = steps.sewReceive || { checked: false, time: null };
-                const step5 = steps.pack || { checked: false, time: null };
-
+                const st = o.steps || {};
                 html += `
-                    <div class="bg-zinc-900 rounded-2xl shadow-sm border border-zinc-800 overflow-hidden flex flex-col justify-between transition hover:border-zinc-700">
-                        <div>
-                            <!-- Card Header -->
-                            <div class="p-4 bg-zinc-950 border-b border-zinc-800 flex justify-between items-start gap-2">
-                                <div>
-                                    <div class="flex items-center gap-2">
-                                        <span class="font-bold text-white text-base">${order.code || ''}</span>
-                                        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold border ${status.badgeClass} flex items-center gap-1">
-                                            <span class="w-2 h-2 rounded-full ${status.dotClass}"></span>
-                                            ${status.text}
-                                        </span>
-                                    </div>
-                                    <p class="text-xs text-zinc-400 mt-0.5"><i class="fa-solid fa-user-tie mr-1 text-zinc-500"></i> ลูกค้า: <strong class="text-zinc-200">${order.customer || ''}</strong></p>
+                    <div class="bg-zinc-900 rounded-2xl border border-zinc-800 overflow-hidden flex flex-col justify-between">
+                        <div class="p-4 bg-zinc-950 border-b border-zinc-800 flex justify-between items-start">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <span class="font-bold text-white text-base">${o.code}</span>
+                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold border ${s.badge} flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full ${s.dot}"></span>${s.text}</span>
                                 </div>
-                                <div class="flex items-center gap-1">
-                                    <button onclick="openEditModal('${order.id}')" class="p-1.5 text-zinc-400 hover:text-amber-400 transition rounded-lg hover:bg-zinc-800" title="แก้ไข">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </button>
-                                    <button onclick="deleteOrder('${order.id}')" class="p-1.5 text-zinc-400 hover:text-red-400 transition rounded-lg hover:bg-zinc-800" title="ลบ">
-                                        <i class="fa-solid fa-trash-can"></i>
-                                    </button>
-                                </div>
+                                <p class="text-xs text-zinc-400 mt-0.5">ลูกค้า: <strong class="text-zinc-200">${o.customer}</strong></p>
                             </div>
-
-                            <!-- Card Body -->
-                            <div class="p-4 space-y-3">
-                                ${order.imageBase64 ? `
-                                    <div class="relative group cursor-pointer overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 h-32 flex items-center justify-center" onclick="openLightbox('${order.imageBase64}')">
-                                        <img src="${order.imageBase64}" alt="Order Image" class="w-full h-full object-cover transition group-hover:scale-105">
-                                        <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-semibold gap-1">
-                                            <i class="fa-solid fa-magnifying-glass-plus"></i> ดูรูปขนาดใหญ่
-                                        </div>
-                                    </div>
-                                ` : ''}
-
-                                <div class="flex justify-between items-center text-xs bg-zinc-950 p-2.5 rounded-xl border border-zinc-800">
-                                    <span class="text-zinc-400 font-medium"><i class="fa-solid fa-shirt text-amber-400 mr-1"></i> ชนิดผ้า: <span class="text-white font-bold">${order.fabric || ''}</span></span>
-                                    <span class="text-amber-400 font-bold bg-zinc-900 px-2 py-1 rounded-lg border border-zinc-800">รวม ${(order.totalQty || 0).toLocaleString()} ตัว</span>
-                                </div>
-
-                                <!-- Sizes Breakdown -->
-                                <div>
-                                    <p class="text-[11px] font-bold text-zinc-500 uppercase tracking-wider mb-1.5">รายละเอียดไซส์ที่มีการสั่งผลิต</p>
-                                    <div class="grid grid-cols-6 gap-1 text-center">
-                                        ${activeSizesHtml || '<p class="text-xs text-zinc-500 col-span-6">ไม่มีจำนวนระบุ</p>'}
-                                    </div>
-                                </div>
-
-                                <!-- Checklist Process 1-5 -->
-                                <div class="border-t border-zinc-800 pt-3">
-                                    <p class="text-[11px] font-bold text-zinc-500 uppercase tracking-wider mb-2">กระบวนการผลิต (คลิกติ๊กเช็ค)</p>
-                                    <div class="space-y-2">
-                                        <!-- Step 1 -->
-                                        <label class="flex items-start gap-2.5 p-2 rounded-xl bg-zinc-950 hover:bg-zinc-800/60 cursor-pointer transition border border-zinc-800/80">
-                                            <input type="checkbox" ${step1.checked ? 'checked' : ''} onchange="toggleStep('${order.id}', 'print')" class="mt-0.5 w-4 h-4 text-amber-500 rounded bg-zinc-900 border-zinc-700 focus:ring-amber-400">
-                                            <div class="flex-grow flex justify-between items-center text-xs">
-                                                <div>
-                                                    <span class="font-semibold ${step1.checked ? 'text-emerald-400 line-through' : 'text-zinc-300'}">1. พิมพ์ / โรลผ้า (Print)</span>
-                                                    ${step1.time ? `<span class="block text-[10px] text-zinc-500">${step1.time}</span>` : ''}
-                                                </div>
-                                                <i class="fa-solid fa-print ${step1.checked ? 'text-emerald-400' : 'text-zinc-600'}"></i>
-                                            </div>
-                                        </label>
-
-                                        <!-- Step 2 -->
-                                        <label class="flex items-start gap-2.5 p-2 rounded-xl bg-zinc-950 hover:bg-zinc-800/60 cursor-pointer transition border border-zinc-800/80">
-                                            <input type="checkbox" ${step2.checked ? 'checked' : ''} onchange="toggleStep('${order.id}', 'cut')" class="mt-0.5 w-4 h-4 text-amber-500 rounded bg-zinc-900 border-zinc-700 focus:ring-amber-400">
-                                            <div class="flex-grow flex justify-between items-center text-xs">
-                                                <div>
-                                                    <span class="font-semibold ${step2.checked ? 'text-emerald-400 line-through' : 'text-zinc-300'}">2. ตัดผ้า (Cut)</span>
-                                                    ${step2.time ? `<span class="block text-[10px] text-zinc-500">${step2.time}</span>` : ''}
-                                                </div>
-                                                <i class="fa-solid fa-scissors ${step2.checked ? 'text-emerald-400' : 'text-zinc-600'}"></i>
-                                            </div>
-                                        </label>
-
-                                        <!-- Step 3 -->
-                                        <label class="flex items-start gap-2.5 p-2 rounded-xl bg-zinc-950 hover:bg-zinc-800/60 cursor-pointer transition border border-zinc-800/80">
-                                            <input type="checkbox" ${step3.checked ? 'checked' : ''} onchange="toggleStep('${order.id}', 'sewSend')" class="mt-0.5 w-4 h-4 text-amber-500 rounded bg-zinc-900 border-zinc-700 focus:ring-amber-400">
-                                            <div class="flex-grow flex justify-between items-center text-xs">
-                                                <div>
-                                                    <span class="font-semibold ${step3.checked ? 'text-emerald-400 line-through' : 'text-zinc-300'}">3. ส่งเย็บ (Send to Sew)</span>
-                                                    ${step3.time ? `<span class="block text-[10px] text-zinc-500">${step3.time}</span>` : ''}
-                                                </div>
-                                                <i class="fa-solid fa-truck-fast ${step3.checked ? 'text-emerald-400' : 'text-zinc-600'}"></i>
-                                            </div>
-                                        </label>
-
-                                        <!-- Step 4 -->
-                                        <label class="flex items-start gap-2.5 p-2 rounded-xl bg-zinc-950 hover:bg-zinc-800/60 cursor-pointer transition border border-zinc-800/80">
-                                            <input type="checkbox" ${step4.checked ? 'checked' : ''} onchange="toggleStep('${order.id}', 'sewReceive')" class="mt-0.5 w-4 h-4 text-amber-500 rounded bg-zinc-900 border-zinc-700 focus:ring-amber-400">
-                                            <div class="flex-grow flex justify-between items-center text-xs">
-                                                <div>
-                                                    <span class="font-semibold ${step4.checked ? 'text-emerald-400 line-through' : 'text-zinc-300'}">4. ได้รับผ้าเย็บแล้ว (QC)</span>
-                                                    ${step4.time ? `<span class="block text-[10px] text-zinc-500">${step4.time}</span>` : ''}
-                                                </div>
-                                                <i class="fa-solid fa-clipboard-check ${step4.checked ? 'text-emerald-400' : 'text-zinc-600'}"></i>
-                                            </div>
-                                        </label>
-
-                                        <!-- Step 5 -->
-                                        <label class="flex items-start gap-2.5 p-2 rounded-xl bg-zinc-950 hover:bg-zinc-800/60 cursor-pointer transition border border-zinc-800/80">
-                                            <input type="checkbox" ${step5.checked ? 'checked' : ''} onchange="toggleStep('${order.id}', 'pack')" class="mt-0.5 w-4 h-4 text-amber-500 rounded bg-zinc-900 border-zinc-700 focus:ring-amber-400">
-                                            <div class="flex-grow flex justify-between items-center text-xs">
-                                                <div>
-                                                    <span class="font-semibold ${step5.checked ? 'text-emerald-400 line-through' : 'text-zinc-300'}">5. แพ็คสินค้า (Pack)</span>
-                                                    ${step5.time ? `<span class="block text-[10px] text-zinc-500">${step5.time}</span>` : ''}
-                                                </div>
-                                                <i class="fa-solid fa-box-archive ${step5.checked ? 'text-emerald-400' : 'text-zinc-600'}"></i>
-                                            </div>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                ${order.note ? `<div class="text-xs bg-amber-500/10 text-amber-300 p-2.5 rounded-xl border border-amber-500/20"><i class="fa-solid fa-note-sticky mr-1"></i> <strong>หมายเหตุ:</strong> ${order.note}</div>` : ''}
+                            <div class="flex gap-1">
+                                <button onclick="openEditModal('${o.id}')" class="p-1.5 text-zinc-400 hover:text-amber-400"><i class="fa-solid fa-pen-to-square"></i></button>
+                                <button onclick="deleteOrder('${o.id}')" class="p-1.5 text-zinc-400 hover:text-red-400"><i class="fa-solid fa-trash-can"></i></button>
                             </div>
                         </div>
-
-                        <!-- Card Footer -->
-                        <div class="px-4 py-3 bg-zinc-950 border-t border-zinc-800 flex justify-between items-center text-xs">
-                            <span class="text-zinc-400"><i class="fa-regular fa-calendar-days mr-1 text-amber-400"></i> กำหนดส่ง: <strong class="text-zinc-200">${formattedDueDate}</strong></span>
-                            <span class="text-zinc-500 text-[10px]">สร้างเมื่อ: ${order.createdAt || ''}</span>
+                        <div class="p-4 space-y-3">
+                            ${o.imageBase64 ? `<div class="cursor-pointer h-28 rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950" onclick="openLightbox('${o.imageBase64}')"><img src="${o.imageBase64}" class="w-full h-full object-cover"></div>` : ''}
+                            <div class="flex justify-between items-center text-xs bg-zinc-950 p-2 rounded-xl border border-zinc-800">
+                                <span class="text-zinc-400">ผ้า: <strong class="text-white">${o.fabric}</strong></span>
+                                <span class="text-amber-400 font-bold">รวม ${(o.totalQty||0).toLocaleString()} ตัว</span>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-bold text-zinc-500 mb-1 uppercase">ไซส์</p>
+                                <div class="grid grid-cols-6 gap-1">${sizesHtml || '<span class="text-xs text-zinc-500 col-span-6">ไม่มีระบุ</span>'}</div>
+                            </div>
+                            <div class="border-t border-zinc-800 pt-2 space-y-1.5">
+                                <p class="text-[10px] font-bold text-zinc-500 uppercase">ขั้นตอนผลิต</p>
+                                ${['print','cut','sewSend','sewReceive','pack'].map((k, i) => {
+                                    const labels = ['1. พิมพ์/โรลผ้า', '2. ตัดผ้า', '3. ส่งเย็บ', '4. QC', '5. แพ็ค'];
+                                    const checked = st[k]?.checked;
+                                    return `<label class="flex items-center justify-between p-1.5 bg-zinc-950 rounded-lg cursor-pointer border border-zinc-800 text-xs">
+                                        <div class="flex items-center gap-2"><input type="checkbox" ${checked?'checked':''} onchange="toggleStep('${o.id}','${k}')" class="w-4 h-4 rounded bg-zinc-900 border-zinc-700 text-amber-500"><span class="${checked?'text-emerald-400 line-through':'text-zinc-300'}">${labels[i]}</span></div>
+                                        <span class="text-[10px] text-zinc-500">${st[k]?.time || ''}</span>
+                                    </label>`;
+                                }).join('')}
+                            </div>
+                            ${o.note ? `<div class="text-xs bg-amber-500/10 text-amber-300 p-2 rounded-xl border border-amber-500/20"><strong>หมายเหตุ:</strong> ${o.note}</div>` : ''}
+                        </div>
+                        <div class="px-4 py-2.5 bg-zinc-950 border-t border-zinc-800 flex justify-between text-xs text-zinc-400">
+                            <span>กำหนดส่ง: <strong class="text-white">${o.dueDate}</strong></span>
+                            <span class="text-[10px] text-zinc-500">สร้างเมื่อ: ${o.createdAt || ''}</span>
                         </div>
                     </div>
                 `;
             });
-
             container.innerHTML = html;
         }
-
-        function showCustomAlert(message, type = 'success') {
-            const modal = document.getElementById('alert-modal');
-            const titleEl = document.getElementById('alert-title');
-            const msgEl = document.getElementById('alert-message');
-            const iconEl = document.getElementById('alert-icon');
-
-            msgEl.innerText = message;
-            if (type === 'success') {
-                titleEl.innerText = 'สำเร็จ';
-                iconEl.className = 'w-14 h-14 rounded-full flex items-center justify-center text-2xl mx-auto mb-3 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
-                iconEl.innerHTML = '<i class="fa-solid fa-check"></i>';
-            } else {
-                titleEl.innerText = 'แจ้งเตือน / ข้อผิดพลาด';
-                iconEl.className = 'w-14 h-14 rounded-full flex items-center justify-center text-2xl mx-auto mb-3 bg-red-500/10 text-red-400 border border-red-500/20';
-                iconEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
-            }
-            modal.classList.remove('hidden');
-        }
-
-        window.closeAlert = function() {
-            document.getElementById('alert-modal').classList.add('hidden');
-        };
     </script>
 </body>
 </html>
